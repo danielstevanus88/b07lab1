@@ -7,7 +7,10 @@ class Polynomial{
 	}
 	
 	Polynomial(double [] coefficients) {
-		this.coefficients = coefficients;
+		this.coefficients = new double[coefficients.length];
+		for(int i = 0; i < coefficients.length; i++) {
+			this.coefficients[i] = coefficients[i];
+		}
 	}
 	
 	Polynomial add(Polynomial poly) {
@@ -18,7 +21,6 @@ class Polynomial{
 			
 			if (i < poly.coefficients.length)
 				newCoefficients[i] += poly.coefficients[i];
-			
 		}
 		
 		return new Polynomial(newCoefficients);
