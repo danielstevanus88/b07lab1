@@ -31,8 +31,11 @@ public static void main(String [] args) throws IOException {
 	
 	Polynomial p3 = new Polynomial(file3);
 	Polynomial p4 = new Polynomial(file4);
-//	
+
 	p3.multiply(p4).saveToFile("p3xp4.txt");
+	System.out.println("p3 :\n" + p3.polynomialToString());
+	System.out.println("p4 :\n" + p4.polynomialToString());
+	System.out.println("p3xp4 :\n" + p3.multiply(p4).polynomialToString());
 	
 	Polynomial add = p1.add(p2);
 	Polynomial multiply = p1.multiply(p2);
@@ -48,5 +51,23 @@ public static void main(String [] args) throws IOException {
 	Polynomial readFromFilePoly = new Polynomial(f);
 	System.out.println("Result read from multiply.txt:\n" + readFromFilePoly.polynomialToString());
 	
+	// Edge case
+	int [] exp5 = {2, 4};
+	double [] coef5 = {10, 5};
+	Polynomial p5 = new Polynomial(coef5, exp5);
+	
+	int [] exp6 = {2, 4};
+	double [] coef6 = {-10, -5}; 
+	Polynomial p6 = new Polynomial(coef6, exp6);	
+	
+	System.out.println("p5 + p6 = " + p5.add(p6).polynomialToString());	
+	
+	File f7 = new File("p7.txt");
+	File f8 = new File("p8.txt");
+	Polynomial p7 = new Polynomial(f7);
+	Polynomial p8 = new Polynomial(f8);
+	
+	p7.add(p8).saveToFile("p7+p8.txt");
+	p7.multiply(p8).saveToFile("p7xp8.txt");
 	}
 }

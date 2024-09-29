@@ -20,66 +20,57 @@ class Polynomial{
 		
 		Scanner scanner = new Scanner(file);
 		String polynomialString = scanner.nextLine();
+		scanner.close();
 	
-		int index = 0;
+		String [] splittedString = polynomialString.split("[+-]");
 		
-		while (index < polynomialString.length()) {
-			String doubleString = "";
-			String intString = "";
-
-//			System.out.println(polynomialString.charAt(index));
-			
-            // Get the double sign
-			if(polynomialString.charAt(index) == '+' || polynomialString.charAt(index) == '-') {
-				doubleString += polynomialString.charAt(index);
-				index = index + 1;
-			}
-			
-			// Get the double number
-			while(index < polynomialString.length()
-					&& polynomialString.charAt(index) != 'x'
-					&& polynomialString.charAt(index) != '+' 
-					&& polynomialString.charAt(index) != '-' ) {
-				doubleString += polynomialString.charAt(index);
-				index = index + 1;
-			}
-			
-			if(index < polynomialString.length() && polynomialString.charAt(index) == 'x') {
-				index = index + 1;
-				
-				// Get the integer
-				while(index < polynomialString.length() 
-						&& polynomialString.charAt(index) != '+' && 
-						polynomialString.charAt(index) != '-') {
-					
-					intString += polynomialString.charAt(index);
-					index = index + 1;
+		int length = splittedString.length;
+		// If the first coefficient is negative, then splittedString[0] is empty string
+		if(splittedString[0] == "") length--;
+		
+		// Get the sign of each elements
+		String [] sign = new String[length];
+		int indexSign = 0;
+		for(int i = 0; i < polynomialString.length(); i++) {
+			if(i == 0) {
+				if(polynomialString.charAt(i) != '-') {
+					sign[indexSign] = "+";
+				} else {
+					sign[indexSign] = "-";
 				}
-			} else {
-				intString = "0";
+				indexSign++;
 			}
-			
-			// Unite everything
-
-			double [] coef = {0};
-			int [] exp = {0};
-			
-			if(doubleString == "") doubleString = "0";
-			if(intString == "") intString = "0";
-			coef[0] = Double.parseDouble(doubleString);
-			exp[0] = Integer.parseInt(intString);
+			else if(polynomialString.charAt(i) == '-') {
+				sign[indexSign] = "-";
+				indexSign++;
+			}
+			else if(polynomialString.charAt(i) == '+') {
+				sign[indexSign] = "+";
+				indexSign++;
+			} 
+		}
 		
-			ret = ret.add(new Polynomial(coef, exp));
+		int index = 0;
+		for(String s: splittedString) {
+			if(s == "") continue;
+			String [] pairCoefExp = s.split("x");
+			double [] newCoef = new double[1];
+			int [] newExp = new int[1];
 			
 			
-			// Get the +/- back
-			if(index >= polynomialString.length()) break;
+			newCoef[0] = Double.parseDouble(sign[index] + pairCoefExp[0]);
+			if (pairCoefExp.length == 1) newExp[0] = 0;
+			else newExp[0] = Integer.parseInt(pairCoefExp[1]);
 			
-			
+			// System.out.println((new Polynomial(newCoef, newExp)).polynomialToString());
+			ret = ret.add(new Polynomial(newCoef, newExp));
+			//  System.out.println(ret.polynomialToString());
+			index++;
 		}
 		
 		this.coefficients = ret.coefficients;
 		this.exponents = ret.exponents;
+		
 	}
 	
 	Polynomial(double [] coefficients, int [] exponents) {
@@ -95,13 +86,13 @@ class Polynomial{
 		
 		int length = 0;
 		for(int i = 0; i < exponentsCount.length; i++) {
-			if (exponentsCount[i] > 0) length++;	
+			if (exponentsCount[i] != 0) length++;	
 		}
 		
 		int [] exponents = new int[Math.max(length, 1)];
 		int index = 0;
 		for(int i = 0; i < exponentsCount.length; i++) {
-			if (exponentsCount[i] > 0) {
+			if (exponentsCount[i] != 0) {
 				exponents[index] = i;
 				index++;
 			}
@@ -113,16 +104,18 @@ class Polynomial{
 	double [] convertExponentsCountToCoefficientsArray (double [] exponentsCount) {
 		int length = 0;
 		for(int i = 0; i < exponentsCount.length; i++) {
-			if (exponentsCount[i] > 0) length++;	
+			if (exponentsCount[i] != 0) length++;	
 		}
 		
 		double [] coefficients = new double[Math.max(length, 1)];
 		int index = 0;
 		for(int i = 0; i < exponentsCount.length; i++) {
-			if (exponentsCount[i] > 0) {
+			if (exponentsCount[i] != 0) {
 				coefficients[index] += exponentsCount[i];
 				index++;
 			}
+			
+
 		}
 		return coefficients;
 	}
@@ -144,6 +137,7 @@ class Polynomial{
 		for(int i = 0; i < poly.exponents.length; i++) {
 			exponentsCount[poly.exponents[i]] += poly.coefficients[i];
 		}
+		
 		
 		double [] newCoefficients = convertExponentsCountToCoefficientsArray(exponentsCount);
 		int [] newExponents = convertExponentsCountToExponentsArray(exponentsCount);
