@@ -19,58 +19,58 @@ class Polynomial{
 		Polynomial ret = new Polynomial();
 		
 		Scanner scanner = new Scanner(file);
-		String polynomialString = scanner.nextLine();
-		scanner.close();
-	
-		String [] splittedString = polynomialString.split("[+-]");
-		
-		int length = splittedString.length;
-		// If the first coefficient is negative, then splittedString[0] is empty string
-		if(splittedString[0] == "") length--;
-		
-		// Get the sign of each elements
-		String [] sign = new String[length];
-		int indexSign = 0;
-		for(int i = 0; i < polynomialString.length(); i++) {
-			if(i == 0) {
-				if(polynomialString.charAt(i) != '-') {
-					sign[indexSign] = "+";
-				} else {
-					sign[indexSign] = "-";
+		if (scanner.hasNextLine()) {
+			String polynomialString = scanner.nextLine();
+
+			String [] splittedString = polynomialString.split("[+-]");
+			
+			int length = splittedString.length;
+			// If the first coefficient is negative, then splittedString[0] is empty string
+			if(splittedString[0] == "") length--;
+			
+			// Get the sign of each elements
+			String [] sign = new String[length];
+			int indexSign = 0;
+			for(int i = 0; i < polynomialString.length(); i++) {
+				if(i == 0) {
+					if(polynomialString.charAt(i) != '-') {
+						sign[indexSign] = "+";
+					} else {
+						sign[indexSign] = "-";
+					}
+					indexSign++;
 				}
-				indexSign++;
+				else if(polynomialString.charAt(i) == '-') {
+					sign[indexSign] = "-";
+					indexSign++;
+				}
+				else if(polynomialString.charAt(i) == '+') {
+					sign[indexSign] = "+";
+					indexSign++;
+				} 
 			}
-			else if(polynomialString.charAt(i) == '-') {
-				sign[indexSign] = "-";
-				indexSign++;
+			
+			int index = 0;
+			for(String s: splittedString) {
+				if(s == "") continue;
+				String [] pairCoefExp = s.split("x");
+				double [] newCoef = new double[1];
+				int [] newExp = new int[1];
+				
+				
+				newCoef[0] = Double.parseDouble(sign[index] + pairCoefExp[0]);
+				if (pairCoefExp.length == 1) newExp[0] = 0;
+				else newExp[0] = Integer.parseInt(pairCoefExp[1]);
+				
+				// System.out.println((new Polynomial(newCoef, newExp)).polynomialToString());
+				ret = ret.add(new Polynomial(newCoef, newExp));
+				//  System.out.println(ret.polynomialToString());
+				index++;
 			}
-			else if(polynomialString.charAt(i) == '+') {
-				sign[indexSign] = "+";
-				indexSign++;
-			} 
 		}
-		
-		int index = 0;
-		for(String s: splittedString) {
-			if(s == "") continue;
-			String [] pairCoefExp = s.split("x");
-			double [] newCoef = new double[1];
-			int [] newExp = new int[1];
-			
-			
-			newCoef[0] = Double.parseDouble(sign[index] + pairCoefExp[0]);
-			if (pairCoefExp.length == 1) newExp[0] = 0;
-			else newExp[0] = Integer.parseInt(pairCoefExp[1]);
-			
-			// System.out.println((new Polynomial(newCoef, newExp)).polynomialToString());
-			ret = ret.add(new Polynomial(newCoef, newExp));
-			//  System.out.println(ret.polynomialToString());
-			index++;
-		}
-		
 		this.coefficients = ret.coefficients;
 		this.exponents = ret.exponents;
-		
+		scanner.close();
 	}
 	
 	Polynomial(double [] coefficients, int [] exponents) {
@@ -177,10 +177,7 @@ class Polynomial{
 	}
 	
 	boolean hasRoot(double x) {
-		if (evaluate(x) == 0) {
-			return true;
-		}
-		return false;
+		return (evaluate(x) == 0);
 	}
 	
 	String polynomialToString() {
