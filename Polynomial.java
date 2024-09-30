@@ -26,7 +26,7 @@ class Polynomial{
 			
 			int length = splittedString.length;
 			// If the first coefficient is negative, then splittedString[0] is empty string
-			if(splittedString[0] == "") length--;
+			if(splittedString[0].equals("")) length--;
 			
 			// Get the sign of each elements
 			String [] sign = new String[length];
@@ -52,7 +52,7 @@ class Polynomial{
 			
 			int index = 0;
 			for(String s: splittedString) {
-				if(s == "") continue;
+				if(s.equals("")) continue;
 				String [] pairCoefExp = s.split("x");
 				double [] newCoef = new double[1];
 				int [] newExp = new int[1];
